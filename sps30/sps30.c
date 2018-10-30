@@ -1,0 +1,192 @@
+/*
+ * Copyright (c) 2018, Sensirion AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * * Neither the name of Sensirion AG nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "sensirion_arch_config.h"
+#include "sensirion_i2c.h"
+#include "sensirion_common.h"
+#include "sps_git_version.h"
+#include "sps30.h"
+
+
+static const u8 SPS_I2C_ADDRESS = 0x69;
+
+
+#define SPS_CMD_START_MEASUREMENT       0x0010
+#define SPS_CMD_START_MEASUREMENT_ARG   0x0300
+#define SPS_CMD_STOP_MEASUREMENT        0x0104
+#define SPS_CMD_READ_MEASUREMENT        0x0300
+#define SPS_CMD_GET_DATA_READY          0x0202
+#define SPS_CMD_AUTOCLEAN_INTERVAL      0x8004
+#define SPS_CMD_GET_SERIAL              0xd033
+#define SPS_CMD_RESET                   0xd304
+
+
+s16 sps30_probe() {
+    char serial[SPS_MAX_SERIAL_LEN];
+
+    sensirion_i2c_init();
+
+    return sps30_get_serial(serial);
+}
+
+s16 sps30_get_serial(char *serial) {
+    u16 i;
+    s16 ret;
+    union {
+        char serial[SPS_MAX_SERIAL_LEN];
+        u16 __enforce_alignment;
+    } buffer;
+
+    ret = sensirion_i2c_read_cmd(SPS_I2C_ADDRESS, SPS_CMD_GET_SERIAL,
+                                 (u16 *)buffer.serial,
+                                 SENSIRION_NUM_WORDS(buffer.serial));
+    if (ret != STATUS_OK)
+        return ret;
+
+    for (i = 0; i < SPS_MAX_SERIAL_LEN; ++i) {
+        serial[i] = buffer.serial[i];
+        if (serial[i] == '\0')
+            return 0;
+    }
+
+    return 0;
+}
+
+s16 sps30_start_measurement() {
+    const u16 arg = SPS_CMD_START_MEASUREMENT_ARG;
+
+    return sensirion_i2c_write_cmd_with_args(SPS_I2C_ADDRESS,
+                                             SPS_CMD_START_MEASUREMENT,
+                                             &arg,
+                                             SENSIRION_NUM_WORDS(arg));
+}
+
+s16 sps30_stop_measurement() {
+    return sensirion_i2c_write_cmd(SPS_I2C_ADDRESS, SPS_CMD_STOP_MEASUREMENT);
+}
+
+s16 sps30_read_data_ready(u16 *data_ready) {
+    return sensirion_i2c_read_cmd(SPS_I2C_ADDRESS, SPS_CMD_GET_DATA_READY,
+                                  data_ready, SENSIRION_NUM_WORDS(*data_ready));
+}
+
+s16 sps30_read_measurement(struct sps30_measurement *measurement) {
+    f32 data[10];
+    s16 ret;
+    u16 idx;
+    u32 *u32_data = (u32 *)data;
+    union {
+        u32 u;
+        f32 f;
+    } val;
+
+    ret = sensirion_i2c_read_cmd(SPS_I2C_ADDRESS, SPS_CMD_READ_MEASUREMENT,
+                                 (u16 *)data, SENSIRION_NUM_WORDS(data));
+    if (ret != STATUS_OK)
+        return ret;
+
+    idx = 0;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->mc_1p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->mc_2p5 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->mc_4p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->mc_10p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->nc_0p5 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->nc_1p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->nc_2p5 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->nc_4p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->nc_10p0 = val.f;
+    ++idx;
+    val.u = be32_to_cpu(u32_data[idx]);
+    measurement->typical_particle_size = val.f;
+    ++idx;
+
+    return 0;
+}
+
+s16 sps30_get_fan_auto_cleaning_interval(u32 *interval_seconds) {
+    s16 ret = sensirion_i2c_read_cmd(SPS_I2C_ADDRESS,
+                                     SPS_CMD_AUTOCLEAN_INTERVAL,
+                                     (u16 *)interval_seconds,
+                                     SENSIRION_NUM_WORDS(*interval_seconds));
+    if (ret != STATUS_OK)
+        return ret;
+
+    *interval_seconds = be32_to_cpu(*interval_seconds);
+
+    return 0;
+}
+
+s16 sps30_set_fan_auto_cleaning_interval(u32 interval_seconds) {
+    const u16 data[] = {(interval_seconds & 0xFFFF0000) >> 16,
+                        (interval_seconds & 0x0000FFFF) >> 0};
+
+    return sensirion_i2c_write_cmd_with_args(SPS_I2C_ADDRESS,
+                                             SPS_CMD_AUTOCLEAN_INTERVAL, data,
+                                             SENSIRION_NUM_WORDS(data));
+}
+
+s16 sps30_get_fan_auto_cleaning_interval_days(u8 *interval_days) {
+    s16 ret;
+    u32 interval_seconds;
+
+    ret = sps30_get_fan_auto_cleaning_interval(&interval_seconds);
+    if (ret < 0)
+        return ret;
+
+    *interval_days = interval_seconds / (24 * 60 * 60);
+    return ret;
+}
+
+s16 sps30_set_fan_auto_cleaning_interval_days(u8 interval_days) {
+    return sps30_set_fan_auto_cleaning_interval((u32)interval_days *
+                                                24 * 60 * 60);
+}
+
+s16 sps30_reset() {
+    return sensirion_i2c_write_cmd(SPS_I2C_ADDRESS, SPS_CMD_RESET);
+}
