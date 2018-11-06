@@ -47,6 +47,7 @@ static const u8 SPS_I2C_ADDRESS = 0x69;
 #define SPS_CMD_AUTOCLEAN_INTERVAL      0x8004
 #define SPS_CMD_GET_SERIAL              0xd033
 #define SPS_CMD_RESET                   0xd304
+#define SPS_WRITE_DELAY_US              20000
 
 
 s16 sps30_probe() {
@@ -162,12 +163,15 @@ s16 sps30_get_fan_auto_cleaning_interval(u32 *interval_seconds) {
 }
 
 s16 sps30_set_fan_auto_cleaning_interval(u32 interval_seconds) {
+    s16 ret;
     const u16 data[] = {(interval_seconds & 0xFFFF0000) >> 16,
                         (interval_seconds & 0x0000FFFF) >> 0};
 
-    return sensirion_i2c_write_cmd_with_args(SPS_I2C_ADDRESS,
-                                             SPS_CMD_AUTOCLEAN_INTERVAL, data,
-                                             SENSIRION_NUM_WORDS(data));
+    ret = sensirion_i2c_write_cmd_with_args(SPS_I2C_ADDRESS,
+                                            SPS_CMD_AUTOCLEAN_INTERVAL, data,
+                                            SENSIRION_NUM_WORDS(data));
+    sensirion_sleep_usec(SPS_WRITE_DELAY_US);
+    return ret;
 }
 
 s16 sps30_get_fan_auto_cleaning_interval_days(u8 *interval_days) {
