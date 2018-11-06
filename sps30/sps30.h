@@ -173,6 +173,9 @@ s16 sps30_set_fan_auto_cleaning_interval_days(u8 interval_days);
 /**
  * sps30_reset() - reset the SGP30
  *
+ * The sensor reboots to the same state as before the reset.
+ * Note that the sensor takes a few seconds to resume measurements.
+ *
  * Return:          0 on success, an error code otherwise
  */
 s16 sps30_reset();
