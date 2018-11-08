@@ -72,6 +72,7 @@ s16 sps30_get_serial(char *serial) {
     if (ret != STATUS_OK)
         return ret;
 
+    SENSIRION_WORDS_TO_BYTES(buffer.serial, SENSIRION_NUM_WORDS(buffer.serial));
     for (i = 0; i < SPS_MAX_SERIAL_LEN; ++i) {
         serial[i] = buffer.serial[i];
         if (serial[i] == '\0')
@@ -113,6 +114,8 @@ s16 sps30_read_measurement(struct sps30_measurement *measurement) {
                                  (u16 *)data, SENSIRION_NUM_WORDS(data));
     if (ret != STATUS_OK)
         return ret;
+
+    SENSIRION_WORDS_TO_BYTES(data, SENSIRION_NUM_WORDS(data));
 
     idx = 0;
     val.u = be32_to_cpu(u32_data[idx]);
@@ -157,6 +160,8 @@ s16 sps30_get_fan_auto_cleaning_interval(u32 *interval_seconds) {
     if (ret != STATUS_OK)
         return ret;
 
+    SENSIRION_WORDS_TO_BYTES(interval_seconds,
+                             SENSIRION_NUM_WORDS(*interval_seconds));
     *interval_seconds = be32_to_cpu(*interval_seconds);
 
     return 0;
