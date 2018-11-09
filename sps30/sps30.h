@@ -173,8 +173,12 @@ s16 sps30_set_fan_auto_cleaning_interval_days(u8 interval_days);
 /**
  * sps30_reset() - reset the SGP30
  *
- * The sensor reboots to the same state as before the reset.
- * Note that the sensor takes a few seconds to resume measurements.
+ * The sensor reboots to the same state as before the reset but takes a few
+ * seconds to resume measurements.
+ *
+ * Note that the interface-select configuration is reinterpreted, thus Pin 4
+ * must be pulled to ground during the reset period for the sensor to remain in
+ * i2c mode.
  *
  * Return:          0 on success, an error code otherwise
  */
