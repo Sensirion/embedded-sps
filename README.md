@@ -13,8 +13,11 @@ git clone --recursive https://github.com/Sensirion/embedded-sps.git
 
 
 ## Hardware setup
-* Make sure that the SPS30's Pin 4 ("Interface select") is connected to GND,
-  otherwise the sensor works in UART and instead of i2c mode.
+* Make sure that the SPS30's Pin 4 ("Interface select") is connected to GND, on
+  power-up of the sensor, otherwise the sensor works in UART instead of i2c
+  mode. Note that the interface-select configuration is read on every start of
+  the sensor including after a soft-reset.
+
 * The i2c wires need appropriate pull-up resistors if they're not included or
   enabled in your microprocessor.
 
@@ -34,10 +37,10 @@ You only need to touch the following files:
 
 and depending on your i2c implementation one of the following:
 
-* `sensirion_hw_i2c_implementation.c` (functions for hardware i2c
-communication if your platform supports that)
-* `sensirion_sw_i2c_implementation.c` (functions for software i2c
-communication via GPIOs)
+* `sensirion_hw_i2c_implementation.c` (functions for hardware i2c communication
+  if your platform supports that)
+* `sensirion_sw_i2c_implementation.c` (functions for software i2c communication
+  via GPIOs)
 
 
 ## Building the driver
