@@ -30,7 +30,7 @@
  */
 
 #include <stdio.h> // printf
-#include <unistd.h> // sleep
+#include <unistd.h> // sleep / usleep
 
 #include "sps30.h"
 
@@ -90,13 +90,20 @@ int main(void)
     if (ret < 0)
         printf("error starting measurement\n");
     printf("measurements started\n");
+    sleep(1);
 
     do {
-        ret = sps30_read_data_ready(&data_ready);
-        if (ret < 0)
-            printf("error reading data-ready flag\n");
-        else if (!data_ready)
-            printf("data not ready, no new measurement available\n");
+        do {
+            ret = sps30_read_data_ready(&data_ready);
+            if (ret < 0)
+                printf("error %d reading data-ready flag\n", ret);
+            else if (!data_ready)
+                printf("data not ready, no new measurement available\n");
+            else
+                break;
+            usleep(100000); /* retry in 100ms */
+
+        } while (1);
 
         ret = sps30_read_measurement(&m);
         if (ret < 0) {
@@ -114,7 +121,8 @@ int main(void)
                    "\t%0.2f nc4.5\n"
                    "\t%0.2f nc10.0\n"
                    "\t%0.2f typical particle size\n\n",
-                   m.mc_1p0, m.mc_2p5, m.mc_4p0, m.mc_10p0, m.nc_0p5, m.nc_1p0, m.nc_2p5, m.nc_4p0, m.nc_10p0,
+                   m.mc_1p0, m.mc_2p5, m.mc_4p0, m.mc_10p0,
+                   m.nc_0p5, m.nc_1p0, m.nc_2p5, m.nc_4p0, m.nc_10p0,
                    m.typical_particle_size);
         }
 
