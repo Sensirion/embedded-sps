@@ -3,7 +3,7 @@ sps_common_dir := .
 sw_i2c_dir := ${sensirion_common_dir}/sw_i2c
 hw_i2c_dir := ${sensirion_common_dir}/hw_i2c
 
-CFLAGS := -Os -Wall -I. -I${sensirion_common_dir}
+CFLAGS := -Os -Wall -Wstrict-aliasing=1 -I. -I${sensirion_common_dir}
 
 sensirion_common_objects := sensirion_common.o
 sps_common_objects := sps_git_version.o
