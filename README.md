@@ -9,7 +9,7 @@ git clone --recursive https://github.com/Sensirion/embedded-sps.git
 
 ## Repository content
 * `embedded-common` submodule repository for common HAL
-* `sps30` SPS30 driver
+* `sps30-i2c` SPS30 i2c driver
 
 
 ## Hardware setup
@@ -44,7 +44,7 @@ and depending on your i2c implementation one of the following:
 
 
 ## Building the driver
-1. Step into your desired directory (e.g.: `release/sps30`)
+1. Step into your desired directory (e.g.: `release/sps30-i2c`)
 2. Adjust sensirion\_arch\_config.h if the `<stdint.h>` header is not available
 3. Implement necessary functions in `*_implementation.c`
 4. make
