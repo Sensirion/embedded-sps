@@ -1,6 +1,9 @@
 # embedded-sps
-This repository contains the embedded driver sources for Sensirion's
+This repository contains the embedded i2c driver sources for Sensirion's
 SPS product line.
+
+The UART driver of the SPS is available in the
+[embedded-uart-sps](https://github.com/Sensirion/embedded-uart-sps) repository.
 
 ## Clone this repository
 ```
