@@ -1,4 +1,4 @@
-# embedded-sps
+# embedded-sps [![CircleCI](https://circleci.com/gh/Sensirion/embedded-sps.svg?style=shield)](https://circleci.com/gh/Sensirion/embedded-sps) [![GitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](https://raw.githubusercontent.com/Sensirion/embedded-sps/master/LICENSE)
 This repository contains the embedded i2c driver sources for Sensirion's
 SPS product line.
 
