@@ -8,11 +8,15 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: update common repo
+          command: git submodule update --init
       - run: apt update
       - run: apt install -y zip
-      - run: make release
-      - run: make
+      - run: make && make clean
       - run:
           name: make driver
           command: |
+              make release
               cd release/sps30-i2c && make && make clean && cd -
+              make clean
