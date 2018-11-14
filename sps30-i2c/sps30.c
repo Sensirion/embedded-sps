@@ -49,6 +49,10 @@ static const u8 SPS_I2C_ADDRESS = 0x69;
 #define SPS_CMD_RESET                   0xd304
 #define SPS_WRITE_DELAY_US              20000
 
+const char *sps_get_driver_version()
+{
+    return SPS_DRV_VERSION_STR;
+}
 
 s16 sps30_probe() {
     char serial[SPS_MAX_SERIAL_LEN];
