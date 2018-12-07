@@ -63,9 +63,6 @@ void loop() {
         if (ret < 0) {
           Serial.write("read measurement failed\n");
         } else {
-            if (SPS_IS_ERR_STATE(ret)) {
-              Serial.write("Measurements may not be accurate\n");
-            }
             Serial.write("PM 2.5: ");
             Serial.println(measurement.mc_2p5, DEC);
         }
