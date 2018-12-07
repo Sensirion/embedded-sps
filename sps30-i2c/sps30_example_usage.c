@@ -59,32 +59,9 @@ int main(void)
     }
     printf("SPS sensor probing successful\n");
 
-    ret = sps30_get_serial(serial);
-    if (ret)
-        printf("error %d reading serial\n", ret);
-    else
-        printf("SPS Serial: %s\n", serial);
-
-    ret = sps30_get_fan_auto_cleaning_interval(&auto_clean);
-    if (ret)
-        printf("error %d retrieving the auto-clean interval\n", ret);
-    else
-        printf("auto-cleaning interval is %d seconds\n", auto_clean);
-
     ret = sps30_set_fan_auto_cleaning_interval_days(auto_clean_days);
     if (ret)
         printf("error %d setting the auto-clean interval\n", ret);
-
-    ret = sps30_reset();
-    if (ret)
-        printf("error %d resetting the chip\n", ret);
-    sleep(2);
-
-    ret = sps30_get_fan_auto_cleaning_interval_days(&auto_clean_days);
-    if (ret)
-        printf("error retrieving the auto-clean interval\n");
-    else
-        printf("auto-cleaning interval is set to %u days\n", auto_clean_days);
 
     ret = sps30_start_measurement();
     if (ret < 0)
