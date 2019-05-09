@@ -2,7 +2,7 @@ drivers=sps30-i2c
 clean_drivers=$(foreach d, $(drivers), clean_$(d))
 release_drivers=$(foreach d, $(drivers), release/$(d))
 
-.PHONY: FORCE all $(release_drivers) $(clean_drivers)
+.PHONY: FORCE all $(release_drivers) $(clean_drivers) style-check style-fix
 
 all: $(drivers)
 
@@ -40,3 +40,20 @@ $(clean_drivers):
 
 clean: $(clean_drivers)
 	rm -rf release sps30-i2c/sps_git_version.c
+
+style-fix:
+	@if [ $$(git status --porcelain -uno 2> /dev/null | wc -l) -gt "0" ]; \
+	then \
+		echo "Refusing to run on dirty git state. Commit your changes first."; \
+		exit 1; \
+	fi; \
+	git ls-files | grep -e '\.\(c\|h\|cpp\)$$' | xargs clang-format -i -style=file;
+
+style-check: style-fix
+	@if [ $$(git status --porcelain -uno 2> /dev/null | wc -l) -gt "0" ]; \
+	then \
+		echo "Style check failed:"; \
+		git diff; \
+		git checkout -f; \
+		exit 1; \
+	fi;

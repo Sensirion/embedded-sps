@@ -29,8 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h> // printf
-#include <unistd.h> // sleep / usleep
+#include <stdio.h>   // printf
+#include <unistd.h>  // sleep / usleep
 
 #include "sps30.h"
 
@@ -41,8 +41,7 @@
 // #define printf(...)
 // #define sleep(...)
 
-int main(void)
-{
+int main(void) {
     struct sps30_measurement m;
     char serial[SPS_MAX_SERIAL_LEN];
     u8 auto_clean_days = 4;
@@ -98,9 +97,8 @@ int main(void)
                    "\t%0.2f nc4.5\n"
                    "\t%0.2f nc10.0\n"
                    "\t%0.2f typical particle size\n\n",
-                   m.mc_1p0, m.mc_2p5, m.mc_4p0, m.mc_10p0,
-                   m.nc_0p5, m.nc_1p0, m.nc_2p5, m.nc_4p0, m.nc_10p0,
-                   m.typical_particle_size);
+                   m.mc_1p0, m.mc_2p5, m.mc_4p0, m.mc_10p0, m.nc_0p5, m.nc_1p0,
+                   m.nc_2p5, m.nc_4p0, m.nc_10p0, m.typical_particle_size);
         }
 
         sleep(1);

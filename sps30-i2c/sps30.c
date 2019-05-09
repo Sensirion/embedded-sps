@@ -29,28 +29,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sensirion_arch_config.h"
-#include "sensirion_i2c.h"
-#include "sensirion_common.h"
-#include "sps_git_version.h"
 #include "sps30.h"
-
+#include "sensirion_arch_config.h"
+#include "sensirion_common.h"
+#include "sensirion_i2c.h"
+#include "sps_git_version.h"
 
 static const u8 SPS_I2C_ADDRESS = 0x69;
 
+#define SPS_CMD_START_MEASUREMENT 0x0010
+#define SPS_CMD_START_MEASUREMENT_ARG 0x0300
+#define SPS_CMD_STOP_MEASUREMENT 0x0104
+#define SPS_CMD_READ_MEASUREMENT 0x0300
+#define SPS_CMD_GET_DATA_READY 0x0202
+#define SPS_CMD_AUTOCLEAN_INTERVAL 0x8004
+#define SPS_CMD_GET_SERIAL 0xd033
+#define SPS_CMD_RESET 0xd304
+#define SPS_WRITE_DELAY_US 20000
 
-#define SPS_CMD_START_MEASUREMENT       0x0010
-#define SPS_CMD_START_MEASUREMENT_ARG   0x0300
-#define SPS_CMD_STOP_MEASUREMENT        0x0104
-#define SPS_CMD_READ_MEASUREMENT        0x0300
-#define SPS_CMD_GET_DATA_READY          0x0202
-#define SPS_CMD_AUTOCLEAN_INTERVAL      0x8004
-#define SPS_CMD_GET_SERIAL              0xd033
-#define SPS_CMD_RESET                   0xd304
-#define SPS_WRITE_DELAY_US              20000
-
-const char *sps_get_driver_version()
-{
+const char *sps_get_driver_version() {
     return SPS_DRV_VERSION_STR;
 }
 
@@ -90,8 +87,7 @@ s16 sps30_start_measurement() {
     const u16 arg = SPS_CMD_START_MEASUREMENT_ARG;
 
     return sensirion_i2c_write_cmd_with_args(SPS_I2C_ADDRESS,
-                                             SPS_CMD_START_MEASUREMENT,
-                                             &arg,
+                                             SPS_CMD_START_MEASUREMENT, &arg,
                                              SENSIRION_NUM_WORDS(arg));
 }
 
@@ -160,9 +156,9 @@ s16 sps30_get_fan_auto_cleaning_interval(u32 *interval_seconds) {
         u16 u16[2];
         u32 u32;
     } data;
-    s16 ret = sensirion_i2c_read_cmd(SPS_I2C_ADDRESS,
-                                     SPS_CMD_AUTOCLEAN_INTERVAL,
-                                     data.u16, SENSIRION_NUM_WORDS(data.u16));
+    s16 ret =
+        sensirion_i2c_read_cmd(SPS_I2C_ADDRESS, SPS_CMD_AUTOCLEAN_INTERVAL,
+                               data.u16, SENSIRION_NUM_WORDS(data.u16));
     if (ret != STATUS_OK)
         return ret;
 
@@ -197,8 +193,8 @@ s16 sps30_get_fan_auto_cleaning_interval_days(u8 *interval_days) {
 }
 
 s16 sps30_set_fan_auto_cleaning_interval_days(u8 interval_days) {
-    return sps30_set_fan_auto_cleaning_interval((u32)interval_days *
-                                                24 * 60 * 60);
+    return sps30_set_fan_auto_cleaning_interval((u32)interval_days * 24 * 60 *
+                                                60);
 }
 
 s16 sps30_reset() {
