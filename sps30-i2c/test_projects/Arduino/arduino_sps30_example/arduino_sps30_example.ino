@@ -42,7 +42,7 @@ void setup() {
 
 void loop() {
     struct sps30_measurement measurement;
-    s16 ret;
+    int16_t ret;
 
     while (sps30_probe() != 0) {
         Serial.write("probe failed\n");
