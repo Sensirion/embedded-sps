@@ -44,10 +44,10 @@
 int main(void) {
     struct sps30_measurement m;
     char serial[SPS_MAX_SERIAL_LEN];
-    u8 auto_clean_days = 4;
-    u32 auto_clean;
-    u16 data_ready;
-    s16 ret;
+    uint8_t auto_clean_days = 4;
+    uint32_t auto_clean;
+    uint16_t data_ready;
+    int16_t ret;
 
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.
