@@ -54,8 +54,6 @@ const char *sps_get_driver_version() {
 int16_t sps30_probe() {
     char serial[SPS_MAX_SERIAL_LEN];
 
-    sensirion_i2c_init();
-
     return sps30_get_serial(serial);
 }
 

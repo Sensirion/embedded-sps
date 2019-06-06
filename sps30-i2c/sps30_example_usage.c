@@ -49,6 +49,9 @@ int main(void) {
     uint16_t data_ready;
     int16_t ret;
 
+    /* Initialize I2C bus */
+    sensirion_i2c_init();
+
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.
      */
