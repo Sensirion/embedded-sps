@@ -41,6 +41,7 @@ extern "C" {
 #include "sensirion_i2c.h"
 
 #define SPS_MAX_SERIAL_LEN 32
+#define SPS30_MEASUREMENT_DURATION_USEC 1000000 /* 1s measurement intervals */
 
 struct sps30_measurement {
     float32_t mc_1p0;
@@ -71,6 +72,15 @@ const char *sps_get_driver_version(void);
  * Return:  0 on success, an error code otherwise
  */
 int16_t sps30_probe();
+
+/**
+ * sps30_read_firmware_version - read the firmware version
+ * @major:  Memory where the firmware major version is written into
+ * @minor:  Memory where the firmware minor version is written into
+ *
+ * Return:  0 on success, an error code otherwise
+ */
+int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor);
 
 /**
  * sps30_get_serial() - retrieve the serial number
@@ -177,6 +187,17 @@ int16_t sps30_get_fan_auto_cleaning_interval_days(uint8_t *interval_days);
  * Return:          0 on success, an error code otherwise
  */
 int16_t sps30_set_fan_auto_cleaning_interval_days(uint8_t interval_days);
+
+/**
+ * sps30_start_manual_fan_cleaning() - Immediately trigger the fan cleaning
+ *
+ * Note that this command can only be run when the sensor is in measurement
+ * mode, i.e. after sps30_start_measurement() without subsequent
+ * sps30_stop_measurement().
+ *
+ * Return:          0 on success, an error code otherwise
+ */
+int16_t sps30_start_manual_fan_cleaning();
 
 /**
  * sps30_reset() - reset the SGP30

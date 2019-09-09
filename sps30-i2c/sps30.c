@@ -43,8 +43,10 @@ static const uint8_t SPS_I2C_ADDRESS = 0x69;
 #define SPS_CMD_READ_MEASUREMENT 0x0300
 #define SPS_CMD_GET_DATA_READY 0x0202
 #define SPS_CMD_AUTOCLEAN_INTERVAL 0x8004
+#define SPS_CMD_GET_FIRMWARE_VERSION 0xd100
 #define SPS_CMD_GET_SERIAL 0xd033
 #define SPS_CMD_RESET 0xd304
+#define SPS_CMD_START_MANUAL_FAN_CLEANING 0x5607
 #define SPS_WRITE_DELAY_US 20000
 
 const char *sps_get_driver_version() {
@@ -55,6 +57,17 @@ int16_t sps30_probe() {
     char serial[SPS_MAX_SERIAL_LEN];
 
     return sps30_get_serial(serial);
+}
+
+int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor) {
+    uint16_t version;
+    int16_t ret;
+
+    ret = sensirion_i2c_read_cmd(SPS_I2C_ADDRESS, SPS_CMD_GET_FIRMWARE_VERSION,
+                                 &version, 1);
+    *major = (version & 0xff00) >> 8;
+    *minor = (version & 0x00ff);
+    return ret;
 }
 
 int16_t sps30_get_serial(char *serial) {
@@ -193,6 +206,18 @@ int16_t sps30_get_fan_auto_cleaning_interval_days(uint8_t *interval_days) {
 int16_t sps30_set_fan_auto_cleaning_interval_days(uint8_t interval_days) {
     return sps30_set_fan_auto_cleaning_interval((uint32_t)interval_days * 24 *
                                                 60 * 60);
+}
+
+int16_t sps30_start_manual_fan_cleaning() {
+    int16_t ret;
+
+    ret = sensirion_i2c_write_cmd(SPS_I2C_ADDRESS,
+                                  SPS_CMD_START_MANUAL_FAN_CLEANING);
+    if (ret)
+        return ret;
+
+    sensirion_sleep_usec(SPS_WRITE_DELAY_US);
+    return 0;
 }
 
 int16_t sps30_reset() {
