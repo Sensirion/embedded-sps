@@ -37,6 +37,8 @@ extern "C" {
 #endif
 
 #include "sensirion_arch_config.h"
+#include "sensirion_common.h"
+#include "sensirion_i2c.h"
 
 #define SPS_MAX_SERIAL_LEN 32
 
