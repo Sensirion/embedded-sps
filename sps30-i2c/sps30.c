@@ -39,14 +39,18 @@
 #define SPS_CMD_START_MEASUREMENT_ARG 0x0300
 #define SPS_CMD_STOP_MEASUREMENT 0x0104
 #define SPS_CMD_READ_MEASUREMENT 0x0300
+#define SPS_CMD_START_STOP_DELAY_USEC 20000
 #define SPS_CMD_GET_DATA_READY 0x0202
 #define SPS_CMD_AUTOCLEAN_INTERVAL 0x8004
 #define SPS_CMD_GET_FIRMWARE_VERSION 0xd100
 #define SPS_CMD_GET_SERIAL 0xd033
 #define SPS_CMD_RESET 0xd304
+#define SPS_CMD_SLEEP 0x1001
+#define SPS_CMD_READ_DEVICE_STATUS_REG 0xd206
 #define SPS_CMD_START_MANUAL_FAN_CLEANING 0x5607
-#define SPS_CMD_DELAY_USEC 10000
-#define SPS_WRITE_DELAY_USEC 15000
+#define SPS_CMD_WAKE_UP 0x1103
+#define SPS_CMD_DELAY_USEC 5000
+#define SPS_CMD_DELAY_WRITE_FLASH_USEC 20000
 
 #define SPS30_SERIAL_NUM_WORDS ((SPS30_MAX_SERIAL_LEN) / 2)
 
@@ -56,6 +60,9 @@ const char* sps_get_driver_version() {
 
 int16_t sps30_probe() {
     char serial[SPS30_MAX_SERIAL_LEN];
+
+    // Try to wake up, but ignore failure if it is not in sleep mode
+    (void)sps30_wake_up();
 
     return sps30_get_serial(serial);
 }
@@ -98,7 +105,7 @@ int16_t sps30_start_measurement() {
         SPS30_I2C_ADDRESS, SPS_CMD_START_MEASUREMENT, &arg,
         SENSIRION_NUM_WORDS(arg));
 
-    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+    sensirion_sleep_usec(SPS_CMD_START_STOP_DELAY_USEC);
 
     return ret;
 }
@@ -106,7 +113,7 @@ int16_t sps30_start_measurement() {
 int16_t sps30_stop_measurement() {
     int16_t ret =
         sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_STOP_MEASUREMENT);
-    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+    sensirion_sleep_usec(SPS_CMD_START_STOP_DELAY_USEC);
     return ret;
 }
 
@@ -177,7 +184,7 @@ int16_t sps30_set_fan_auto_cleaning_interval(uint32_t interval_seconds) {
     ret = sensirion_i2c_write_cmd_with_args(SPS30_I2C_ADDRESS,
                                             SPS_CMD_AUTOCLEAN_INTERVAL, data,
                                             SENSIRION_NUM_WORDS(data));
-    sensirion_sleep_usec(SPS_WRITE_DELAY_USEC);
+    sensirion_sleep_usec(SPS_CMD_DELAY_WRITE_FLASH_USEC);
     return ret;
 }
 
@@ -212,4 +219,42 @@ int16_t sps30_start_manual_fan_cleaning() {
 
 int16_t sps30_reset() {
     return sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_RESET);
+}
+
+int16_t sps30_sleep() {
+    int16_t ret;
+
+    ret = sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_SLEEP);
+    if (ret)
+        return ret;
+
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+    return 0;
+}
+
+int16_t sps30_wake_up() {
+    int16_t ret;
+
+    /* wake-up must be sent twice within 100ms, ignore first return value */
+    (void)sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_WAKE_UP);
+    ret = sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_WAKE_UP);
+    if (ret)
+        return ret;
+
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+    return 0;
+}
+
+int16_t sps30_read_device_status_register(uint32_t* device_status_flags) {
+    int16_t ret;
+    uint16_t word_buf[2];
+
+    ret = sensirion_i2c_delayed_read_cmd(
+        SPS30_I2C_ADDRESS, SPS_CMD_READ_DEVICE_STATUS_REG, SPS_CMD_DELAY_USEC,
+        word_buf, SENSIRION_NUM_WORDS(word_buf));
+    if (ret)
+        return ret;
+
+    *device_status_flags = (((uint32_t)word_buf[0]) << 16) | word_buf[1];
+    return 0;
 }
