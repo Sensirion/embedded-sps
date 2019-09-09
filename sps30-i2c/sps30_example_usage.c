@@ -43,9 +43,7 @@
 
 int main(void) {
     struct sps30_measurement m;
-    char serial[SPS_MAX_SERIAL_LEN];
     uint8_t auto_clean_days = 4;
-    uint32_t auto_clean;
     uint16_t data_ready;
     int16_t ret;
 
