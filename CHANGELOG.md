@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`changed`]  Only one example with either `hw_i2c` or `sw_i2c` is built,
                 depending on `CONFIG_I2C_TYPE`. Defaults to `hw_i2c`.
  * [`added`]  Add `SPS30_MEASUREMENT_DURATION_USEC` to header
+ * [`added`]  Add `SPS30_I2C_ADDRESS` to header
 
 ## [2.0.0] - 2019-05-13
 

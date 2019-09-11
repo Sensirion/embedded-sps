@@ -52,7 +52,7 @@ const char *sps_get_driver_version() {
 }
 
 int16_t sps30_probe() {
-    char serial[SPS_MAX_SERIAL_LEN];
+    char serial[SPS30_MAX_SERIAL_LEN];
 
     return sps30_get_serial(serial);
 }
@@ -72,7 +72,7 @@ int16_t sps30_get_serial(char *serial) {
     uint16_t i;
     int16_t ret;
     union {
-        char serial[SPS_MAX_SERIAL_LEN];
+        char serial[SPS30_MAX_SERIAL_LEN];
         uint16_t __enforce_alignment;
     } buffer;
 
@@ -83,7 +83,7 @@ int16_t sps30_get_serial(char *serial) {
         return ret;
 
     SENSIRION_WORDS_TO_BYTES(buffer.serial, SENSIRION_NUM_WORDS(buffer.serial));
-    for (i = 0; i < SPS_MAX_SERIAL_LEN; ++i) {
+    for (i = 0; i < SPS30_MAX_SERIAL_LEN; ++i) {
         serial[i] = buffer.serial[i];
         if (serial[i] == '\0')
             return 0;

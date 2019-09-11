@@ -40,8 +40,8 @@ extern "C" {
 #include "sensirion_common.h"
 #include "sensirion_i2c.h"
 
-#define SPS_MAX_SERIAL_LEN 32
 #define SPS30_I2C_ADDRESS 0x69
+#define SPS30_MAX_SERIAL_LEN 32
 #define SPS30_MEASUREMENT_DURATION_USEC 1000000 /* 1s measurement intervals */
 
 struct sps30_measurement {
@@ -89,7 +89,7 @@ int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor);
  * Note that serial must be discarded when the return code is non-zero.
  *
  * @serial: Memory where the serial number is written into as hex string (zero
- *          terminated). Must be at least SPS_MAX_SERIAL_LEN long.
+ *          terminated). Must be at least SPS30_MAX_SERIAL_LEN long.
  * Return:  0 on success, an error code otherwise
  */
 int16_t sps30_get_serial(char *serial);
