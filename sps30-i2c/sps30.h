@@ -41,6 +41,7 @@ extern "C" {
 #include "sensirion_i2c.h"
 
 #define SPS_MAX_SERIAL_LEN 32
+#define SPS30_I2C_ADDRESS 0x69
 #define SPS30_MEASUREMENT_DURATION_USEC 1000000 /* 1s measurement intervals */
 
 struct sps30_measurement {
