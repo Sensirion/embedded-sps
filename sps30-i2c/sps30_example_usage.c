@@ -60,7 +60,7 @@ int main(void) {
     printf("measurements started\n");
 
     while (1) {
-        sensirion_sleep_usec(1000000); /* wait 1s */
+        sensirion_sleep_usec(SPS30_MEASUREMENT_DURATION_USEC); /* wait 1s */
         ret = sps30_read_measurement(&m);
         if (ret < 0) {
             printf("error reading measurement\n");
