@@ -29,24 +29,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>   // printf
-#include <unistd.h>  // sleep / usleep
+#include <stdio.h>  // printf
 
 #include "sps30.h"
 
 /**
- * TO USE CONSOLE OUTPUT (printf) AND WAIT (sleep) PLEASE ADAPT THEM TO YOUR
- * PLATFORM
+ * TO USE CONSOLE OUTPUT (printf) PLEASE ADAPT TO YOUR PLATFORM:
+ * #define printf(...)
  */
-// #define printf(...)
-// #define sleep(...)
 
 int main(void) {
     struct sps30_measurement m;
-    char serial[SPS_MAX_SERIAL_LEN];
-    uint8_t auto_clean_days = 4;
-    uint32_t auto_clean;
-    uint16_t data_ready;
     int16_t ret;
 
     /* Initialize I2C bus */
@@ -57,33 +50,17 @@ int main(void) {
      */
     while (sps30_probe() != 0) {
         printf("SPS sensor probing failed\n");
-        sleep(1);
+        sensirion_sleep_usec(1000000); /* wait 1s */
     }
     printf("SPS sensor probing successful\n");
-
-    ret = sps30_set_fan_auto_cleaning_interval_days(auto_clean_days);
-    if (ret)
-        printf("error %d setting the auto-clean interval\n", ret);
 
     ret = sps30_start_measurement();
     if (ret < 0)
         printf("error starting measurement\n");
     printf("measurements started\n");
-    sleep(1);
 
-    do {
-        do {
-            ret = sps30_read_data_ready(&data_ready);
-            if (ret < 0)
-                printf("error %d reading data-ready flag\n", ret);
-            else if (!data_ready)
-                printf("data not ready, no new measurement available\n");
-            else
-                break;
-            usleep(100000); /* retry in 100ms */
-
-        } while (1);
-
+    while (1) {
+        sensirion_sleep_usec(SPS30_MEASUREMENT_DURATION_USEC); /* wait 1s */
         ret = sps30_read_measurement(&m);
         if (ret < 0) {
             printf("error reading measurement\n");
@@ -103,9 +80,7 @@ int main(void) {
                    m.mc_1p0, m.mc_2p5, m.mc_4p0, m.mc_10p0, m.nc_0p5, m.nc_1p0,
                    m.nc_2p5, m.nc_4p0, m.nc_10p0, m.typical_particle_size);
         }
-
-        sleep(1);
-    } while (1);
+    }
 
     return 0;
 }
