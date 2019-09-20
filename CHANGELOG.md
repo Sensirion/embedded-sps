@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                 depending on `CONFIG_I2C_TYPE`. Defaults to `hw_i2c`.
  * [`added`]  Add `SPS30_MEASUREMENT_DURATION_USEC` to header
  * [`added`]  Add `SPS30_I2C_ADDRESS` to header
+ * [`changed`] Fix compilation warnings when compiling the linux user space
+               sample implementation with `CONFIG_I2C_TYPE` set to `sw_i2c`
 
 ## [2.0.0] - 2019-05-13
 
