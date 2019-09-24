@@ -1,4 +1,5 @@
 *.o
 /release
-/sps30-i2c/sps_git_version.c
 /sps30-i2c/sps30_example_usage
+/sps30-i2c/user_config.inc
+/sps-common/sps_git_version.c
