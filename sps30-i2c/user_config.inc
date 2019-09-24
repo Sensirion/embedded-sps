@@ -19,6 +19,7 @@
 ## The build paths can also be changed here if needed
 # sps_driver_dir = ..
 # sensirion_common_dir = ${sps_driver_dir}/embedded-common
+# sps_common_dir = ${sps_driver_dir}/sps-common
 # sps30_i2c_dir = ${sps_driver_dir}/sps30-i2c
 
 ## If you need different CFLAGS, those can be customized as well
