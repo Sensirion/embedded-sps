@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`fixed`]   Fix wrong include path in CFLAGS in default config of SPS30
  * [`fixed`]   Fix compiler error that is caused by variables having stdint
                types as names (e.g. `uint16_t uint16_t = 5`)
+ * [`changed`] Update submodule to increase timeout while clock stretching in
+               software I2C mode
 
 ## [2.0.0] - 2019-05-13
 
