@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`changed`] Fix compilation warnings when compiling the linux user space
                sample implementation with `CONFIG_I2C_TYPE` set to `sw_i2c`
  * [`fixed`]   Fix wrong include path in CFLAGS in default config of SPS30
+ * [`fixed`]   Fix compiler error that is caused by variables having stdint
+               types as names (e.g. `uint16_t uint16_t = 5`)
 
 ## [2.0.0] - 2019-05-13
 
