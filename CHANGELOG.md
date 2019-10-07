@@ -20,6 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                types as names (e.g. `uint16_t uint16_t = 5`)
  * [`changed`] Update submodule to increase timeout while clock stretching in
                software I2C mode
+ * [`fixed`]   Add a delay to the following commands in order to fix an I2C
+               write fail that might happen when the sensor is still busy
+               processing the command when the next command arrives:
+               - sps30_start_measurement
+               - sps30_stop_measurement
+               - sps30_set_fan_auto_cleaning_interval
+               - sps30_set_fan_auto_cleaning_interval_days
+               - sps30_start_manual_fan_cleaning
+               - sps30_reset
 
 ## [2.0.0] - 2019-05-13
 

@@ -43,6 +43,7 @@ extern "C" {
 #define SPS30_I2C_ADDRESS 0x69
 #define SPS30_MAX_SERIAL_LEN 32
 #define SPS30_MEASUREMENT_DURATION_USEC 1000000 /* 1s measurement intervals */
+#define SPS30_RESET_DELAY_USEC 50000 /* 50ms delay after resetting the sensor */
 
 struct sps30_measurement {
     float32_t mc_1p0;
@@ -205,6 +206,10 @@ int16_t sps30_start_manual_fan_cleaning();
  *
  * The sensor reboots to the same state as before the reset but takes a few
  * seconds to resume measurements.
+ *
+ * The caller should wait at least SPS30_RESET_DELAY_USEC microseconds before
+ * interacting with the sensor again in order for the sensor to restart.
+ * Interactions with the sensor without this delay might fail.
  *
  * Note that the interface-select configuration is reinterpreted, thus Pin 4
  * must be pulled to ground during the reset period for the sensor to remain in
