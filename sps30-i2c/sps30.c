@@ -45,7 +45,8 @@
 #define SPS_CMD_GET_SERIAL 0xd033
 #define SPS_CMD_RESET 0xd304
 #define SPS_CMD_START_MANUAL_FAN_CLEANING 0x5607
-#define SPS_WRITE_DELAY_US 20000
+#define SPS_CMD_DELAY_USEC 10000
+#define SPS_WRITE_DELAY_USEC 15000
 
 const char *sps_get_driver_version() {
     return SPS_DRV_VERSION_STR;
@@ -95,13 +96,20 @@ int16_t sps30_get_serial(char *serial) {
 int16_t sps30_start_measurement() {
     const uint16_t arg = SPS_CMD_START_MEASUREMENT_ARG;
 
-    return sensirion_i2c_write_cmd_with_args(SPS30_I2C_ADDRESS,
-                                             SPS_CMD_START_MEASUREMENT, &arg,
-                                             SENSIRION_NUM_WORDS(arg));
+    int16_t ret = sensirion_i2c_write_cmd_with_args(
+        SPS30_I2C_ADDRESS, SPS_CMD_START_MEASUREMENT, &arg,
+        SENSIRION_NUM_WORDS(arg));
+
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+
+    return ret;
 }
 
 int16_t sps30_stop_measurement() {
-    return sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_STOP_MEASUREMENT);
+    int16_t ret =
+        sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_STOP_MEASUREMENT);
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+    return ret;
 }
 
 int16_t sps30_read_data_ready(uint16_t *data_ready) {
@@ -186,7 +194,7 @@ int16_t sps30_set_fan_auto_cleaning_interval(uint32_t interval_seconds) {
     ret = sensirion_i2c_write_cmd_with_args(SPS30_I2C_ADDRESS,
                                             SPS_CMD_AUTOCLEAN_INTERVAL, data,
                                             SENSIRION_NUM_WORDS(data));
-    sensirion_sleep_usec(SPS_WRITE_DELAY_US);
+    sensirion_sleep_usec(SPS_WRITE_DELAY_USEC);
     return ret;
 }
 
@@ -215,7 +223,7 @@ int16_t sps30_start_manual_fan_cleaning() {
     if (ret)
         return ret;
 
-    sensirion_sleep_usec(SPS_WRITE_DELAY_US);
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
     return 0;
 }
 
