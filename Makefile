@@ -29,6 +29,7 @@ $(release_drivers): sps-common/sps_git_version.c
 	cp -r embedded-common/* "$${pkgdir}" && \
 	cp -r sps-common/* "$${pkgdir}" && \
 	cp -r $${driver}/* "$${pkgdir}" && \
+	cp CHANGELOG.md LICENSE "$${pkgdir}" && \
 	echo 'sps_driver_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sensirion_common_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sps_common_dir = .' >> $${pkgdir}/user_config.inc && \
