@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                - sps30_set_fan_auto_cleaning_interval_days
                - sps30_start_manual_fan_cleaning
                - sps30_reset
+ * [`removed`] Remove the `AUTHORS` file from the driver and the
+               `embedded-common` submodule, as it adds more noise than benefit.
+               The contributors can be found in the git log.
 
 ## [2.0.0] - 2019-05-13
 
