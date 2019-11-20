@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2019-11-20
+
  * [`fixed`]   Improved compatibility with C++ compilers
  * [`changed`] Move the i2c init call out of `probe()` and into the example
  * [`changed`] Split out `default_config.inc` from Makefile to configure paths
@@ -51,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Initial I2C support for SPS30
 
-[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/2.0.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/3.0.0...master
+[3.0.0]: https://github.com/Sensirion/embedded-sps/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/Sensirion/embedded-sps/compare/1.0.0...2.0.0
 [1.0.0]: https://github.com/Sensirion/embedded-sps/compare/0.9.0...1.0.0
 [0.9.0]: https://github.com/Sensirion/embedded-sps/releases/tag/0.9.0
