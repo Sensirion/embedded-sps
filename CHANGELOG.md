@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`fixed`]   Fix timing with `sps30_get_fan_auto_cleaning_interval` and
+               `sps30_get_fan_auto_cleaning_interval_days` which could result in
+               read failures.
+
 ## [3.0.0] - 2019-11-20
 
  * [`fixed`]   Improved compatibility with C++ compilers
