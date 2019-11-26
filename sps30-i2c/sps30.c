@@ -172,9 +172,9 @@ int16_t sps30_get_fan_auto_cleaning_interval(uint32_t *interval_seconds) {
         uint16_t u16_value[2];
         uint32_t u32_value;
     } data;
-    int16_t ret = sensirion_i2c_read_cmd(
-        SPS30_I2C_ADDRESS, SPS_CMD_AUTOCLEAN_INTERVAL, data.u16_value,
-        SENSIRION_NUM_WORDS(data.u16_value));
+    int16_t ret = sensirion_i2c_delayed_read_cmd(
+        SPS30_I2C_ADDRESS, SPS_CMD_AUTOCLEAN_INTERVAL, SPS_CMD_DELAY_USEC,
+        data.u16_value, SENSIRION_NUM_WORDS(data.u16_value));
     if (ret != STATUS_OK)
         return ret;
 
