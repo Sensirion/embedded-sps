@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2019-11-26
+
  * [`fixed`]   Fix timing with `sps30_get_fan_auto_cleaning_interval` and
                `sps30_get_fan_auto_cleaning_interval_days` which could result in
                read failures.
@@ -57,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Initial I2C support for SPS30
 
-[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/3.0.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/3.0.1...master
+[3.0.1]: https://github.com/Sensirion/embedded-sps/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/Sensirion/embedded-sps/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/Sensirion/embedded-sps/compare/1.0.0...2.0.0
 [1.0.0]: https://github.com/Sensirion/embedded-sps/compare/0.9.0...1.0.0
