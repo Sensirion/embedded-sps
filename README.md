@@ -8,6 +8,8 @@ zip from https://github.com/Sensirion/embedded-sps/releases
 The UART driver of the SPS is available in the
 [embedded-uart-sps](https://github.com/Sensirion/embedded-uart-sps) repository.
 
+*Arduino* (i2c): https://github.com/Sensirion/arduino-sps
+
 ## Clone this repository
 ```
 git clone --recursive https://github.com/Sensirion/embedded-sps.git
