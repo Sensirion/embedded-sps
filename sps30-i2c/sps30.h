@@ -42,9 +42,10 @@ extern "C" {
 
 #define SPS30_I2C_ADDRESS 0x69
 #define SPS30_MAX_SERIAL_LEN 32
-#define SPS30_MEASUREMENT_DURATION_USEC 1000000 /* 1s measurement intervals */
-#define SPS30_RESET_DELAY_USEC 50000 /* 50ms delay after resetting the sensor  \
-                                      */
+/* 1s measurement intervals */
+#define SPS30_MEASUREMENT_DURATION_USEC 1000000
+/* 50ms delay after resetting the sensor */
+#define SPS30_RESET_DELAY_USEC 50000
 
 struct sps30_measurement {
     float mc_1p0;
