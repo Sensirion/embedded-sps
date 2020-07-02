@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`added`]   Support FW2.x (sleep, wake up, device status register)
+ * [`changed`] Update timings according to datasheet
  * [`changed`] Use configuration independent endianness conversions: no need to
                define `SENSIRION_BIG_ENDIAN` anymore.
 
