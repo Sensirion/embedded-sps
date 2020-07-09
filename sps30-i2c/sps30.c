@@ -54,11 +54,11 @@
 
 #define SPS30_SERIAL_NUM_WORDS ((SPS30_MAX_SERIAL_LEN) / 2)
 
-const char* sps_get_driver_version() {
+const char* sps_get_driver_version(void) {
     return SPS_DRV_VERSION_STR;
 }
 
-int16_t sps30_probe() {
+int16_t sps30_probe(void) {
     char serial[SPS30_MAX_SERIAL_LEN];
 
     // Try to wake up, but ignore failure if it is not in sleep mode
@@ -98,7 +98,7 @@ int16_t sps30_get_serial(char* serial) {
     return error;
 }
 
-int16_t sps30_start_measurement() {
+int16_t sps30_start_measurement(void) {
     const uint16_t arg = SPS_CMD_START_MEASUREMENT_ARG;
 
     int16_t ret = sensirion_i2c_write_cmd_with_args(
@@ -110,7 +110,7 @@ int16_t sps30_start_measurement() {
     return ret;
 }
 
-int16_t sps30_stop_measurement() {
+int16_t sps30_stop_measurement(void) {
     int16_t ret =
         sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_STOP_MEASUREMENT);
     sensirion_sleep_usec(SPS_CMD_START_STOP_DELAY_USEC);
@@ -205,7 +205,7 @@ int16_t sps30_set_fan_auto_cleaning_interval_days(uint8_t interval_days) {
                                                 60 * 60);
 }
 
-int16_t sps30_start_manual_fan_cleaning() {
+int16_t sps30_start_manual_fan_cleaning(void) {
     int16_t ret;
 
     ret = sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS,
@@ -217,11 +217,11 @@ int16_t sps30_start_manual_fan_cleaning() {
     return 0;
 }
 
-int16_t sps30_reset() {
+int16_t sps30_reset(void) {
     return sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_RESET);
 }
 
-int16_t sps30_sleep() {
+int16_t sps30_sleep(void) {
     int16_t ret;
 
     ret = sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_SLEEP);
@@ -232,7 +232,7 @@ int16_t sps30_sleep() {
     return 0;
 }
 
-int16_t sps30_wake_up() {
+int16_t sps30_wake_up(void) {
     int16_t ret;
 
     /* wake-up must be sent twice within 100ms, ignore first return value */

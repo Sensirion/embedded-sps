@@ -83,7 +83,7 @@ const char* sps_get_driver_version(void);
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_probe();
+int16_t sps30_probe(void);
 
 /**
  * sps30_read_firmware_version - read the firmware version
@@ -113,7 +113,7 @@ int16_t sps30_get_serial(char* serial);
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_start_measurement();
+int16_t sps30_start_measurement(void);
 
 /**
  * sps30_stop_measurement() - stop measuring
@@ -122,7 +122,7 @@ int16_t sps30_start_measurement();
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_stop_measurement();
+int16_t sps30_stop_measurement(void);
 
 /**
  * sps30_read_datda_ready() - reads the current data-ready flag
@@ -211,7 +211,7 @@ int16_t sps30_set_fan_auto_cleaning_interval_days(uint8_t interval_days);
  *
  * Return:          0 on success, an error code otherwise
  */
-int16_t sps30_start_manual_fan_cleaning();
+int16_t sps30_start_manual_fan_cleaning(void);
 
 /**
  * sps30_reset() - reset the SGP30
@@ -229,7 +229,7 @@ int16_t sps30_start_manual_fan_cleaning();
  *
  * Return:          0 on success, an error code otherwise
  */
-int16_t sps30_reset();
+int16_t sps30_reset(void);
 
 /**
  * sps30_sleep() - Send the (idle) sensor to sleep
@@ -242,7 +242,7 @@ int16_t sps30_reset();
  * Return:          0 on success, an error code otherwise (e.g. if the firmware
  *                  does not support the command)
  */
-int16_t sps30_sleep();
+int16_t sps30_sleep(void);
 
 /**
  * sps30_wake_up() - Wake up the sensor from sleep
@@ -253,7 +253,7 @@ int16_t sps30_sleep();
  * Return:          0 on success, an error code otherwise (e.g. if the firmware
  *                  does not support the command)
  */
-int16_t sps30_wake_up();
+int16_t sps30_wake_up(void);
 
 /**
  * sps30_read_device_status_register() - Read the Device Status Register
