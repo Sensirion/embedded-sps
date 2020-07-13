@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`changed`] Use configuration independent endianness conversions: no need to
+               define `SENSIRION_BIG_ENDIAN` anymore.
+
 ## [3.0.1] - 2019-11-26
 
  * [`fixed`]   Fix timing with `sps30_get_fan_auto_cleaning_interval` and

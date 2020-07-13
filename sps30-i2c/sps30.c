@@ -118,70 +118,55 @@ int16_t sps30_read_data_ready(uint16_t *data_ready) {
 }
 
 int16_t sps30_read_measurement(struct sps30_measurement *measurement) {
-    int16_t ret;
-    uint16_t idx;
-    union {
-        uint16_t u16_value[2];
-        uint32_t u32_value;
-        float f32_value;
-    } val, data[10];
+    int16_t error;
+    uint8_t data[10][4];
 
-    ret = sensirion_i2c_read_cmd(SPS30_I2C_ADDRESS, SPS_CMD_READ_MEASUREMENT,
-                                 data->u16_value, SENSIRION_NUM_WORDS(data));
-    if (ret != STATUS_OK)
-        return ret;
+    error =
+        sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_READ_MEASUREMENT);
+    if (error != NO_ERROR) {
+        return error;
+    }
 
-    SENSIRION_WORDS_TO_BYTES(data->u16_value, SENSIRION_NUM_WORDS(data));
+    error = sensirion_i2c_read_words_as_bytes(SPS30_I2C_ADDRESS, &data[0][0],
+                                              SENSIRION_NUM_WORDS(data));
 
-    idx = 0;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->mc_1p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->mc_2p5 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->mc_4p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->mc_10p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->nc_0p5 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->nc_1p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->nc_2p5 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->nc_4p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->nc_10p0 = val.f32_value;
-    ++idx;
-    val.u32_value = be32_to_cpu(data[idx].u32_value);
-    measurement->typical_particle_size = val.f32_value;
+    if (error != NO_ERROR) {
+        return error;
+    }
+
+    measurement->mc_1p0 = sensirion_bytes_to_float(data[0]);
+    measurement->mc_2p5 = sensirion_bytes_to_float(data[1]);
+    measurement->mc_4p0 = sensirion_bytes_to_float(data[2]);
+    measurement->mc_10p0 = sensirion_bytes_to_float(data[3]);
+    measurement->nc_0p5 = sensirion_bytes_to_float(data[4]);
+    measurement->nc_1p0 = sensirion_bytes_to_float(data[5]);
+    measurement->nc_2p5 = sensirion_bytes_to_float(data[6]);
+    measurement->nc_4p0 = sensirion_bytes_to_float(data[7]);
+    measurement->nc_10p0 = sensirion_bytes_to_float(data[8]);
+    measurement->typical_particle_size = sensirion_bytes_to_float(data[9]);
 
     return 0;
 }
 
 int16_t sps30_get_fan_auto_cleaning_interval(uint32_t *interval_seconds) {
-    union {
-        uint16_t u16_value[2];
-        uint32_t u32_value;
-    } data;
-    int16_t ret = sensirion_i2c_delayed_read_cmd(
-        SPS30_I2C_ADDRESS, SPS_CMD_AUTOCLEAN_INTERVAL, SPS_CMD_DELAY_USEC,
-        data.u16_value, SENSIRION_NUM_WORDS(data.u16_value));
-    if (ret != STATUS_OK)
-        return ret;
+    uint8_t data[4];
+    int16_t error;
 
-    SENSIRION_WORDS_TO_BYTES(data.u16_value,
-                             SENSIRION_NUM_WORDS(data.u16_value));
+    error =
+        sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_AUTOCLEAN_INTERVAL);
+    if (error != NO_ERROR) {
+        return error;
+    }
 
-    *interval_seconds = be32_to_cpu(data.u32_value);
+    sensirion_sleep_usec(SPS_CMD_DELAY_USEC);
+
+    error = sensirion_i2c_read_words_as_bytes(SPS30_I2C_ADDRESS, data,
+                                              SENSIRION_NUM_WORDS(data));
+    if (error != NO_ERROR) {
+        return error;
+    }
+
+    *interval_seconds = sensirion_bytes_to_uint32_t(data);
 
     return 0;
 }
