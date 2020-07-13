@@ -8,6 +8,9 @@ sw_i2c_impl_src ?= ${sensirion_common_dir}/sw_i2c/sensirion_sw_i2c_implementatio
 hw_i2c_impl_src ?= ${sensirion_common_dir}/hw_i2c/sensirion_hw_i2c_implementation.c
 
 CFLAGS ?= -Os -Wall -Wextra -Wfloat-conversion -Wno-unused-parameter -fstrict-aliasing -Wstrict-aliasing=1 -Wsign-conversion -fPIC
+ifdef CI
+	CFLAGS += -Werror
+endif
 CFLAGS += -I${sensirion_common_dir} -I${sps_common_dir} -I${sps30_i2c_dir} \
           -I${sensirion_common_dir}/${CONFIG_I2C_TYPE}
 
