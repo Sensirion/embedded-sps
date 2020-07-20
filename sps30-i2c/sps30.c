@@ -48,6 +48,8 @@
 #define SPS_CMD_DELAY_USEC 10000
 #define SPS_WRITE_DELAY_USEC 15000
 
+#define SPS30_SERIAL_NUM_WORDS ((SPS30_MAX_SERIAL_LEN) / 2)
+
 const char *sps_get_driver_version() {
     return SPS_DRV_VERSION_STR;
 }
@@ -70,27 +72,23 @@ int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor) {
 }
 
 int16_t sps30_get_serial(char *serial) {
-    uint16_t i;
-    int16_t ret;
-    union {
-        char serial[SPS30_MAX_SERIAL_LEN];
-        uint16_t __enforce_alignment;
-    } buffer;
+    int16_t error;
 
-    ret = sensirion_i2c_read_cmd(SPS30_I2C_ADDRESS, SPS_CMD_GET_SERIAL,
-                                 (uint16_t *)buffer.serial,
-                                 SENSIRION_NUM_WORDS(buffer.serial));
-    if (ret != STATUS_OK)
-        return ret;
+    error = sensirion_i2c_write_cmd(SPS30_I2C_ADDRESS, SPS_CMD_GET_SERIAL);
 
-    SENSIRION_WORDS_TO_BYTES(buffer.serial, SENSIRION_NUM_WORDS(buffer.serial));
-    for (i = 0; i < SPS30_MAX_SERIAL_LEN; ++i) {
-        serial[i] = buffer.serial[i];
-        if (serial[i] == '\0')
-            return 0;
+    if (error != NO_ERROR) {
+        return error;
     }
 
-    return 0;
+    error = sensirion_i2c_read_words_as_bytes(
+        SPS30_I2C_ADDRESS, (uint8_t *)serial, SPS30_SERIAL_NUM_WORDS);
+
+    /* ensure a final '\0'. The firmware should always set this so this is just
+     * in case something goes wrong.
+     */
+    serial[SPS30_MAX_SERIAL_LEN - 1] = '\0';
+
+    return error;
 }
 
 int16_t sps30_start_measurement() {
