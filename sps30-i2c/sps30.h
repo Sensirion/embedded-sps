@@ -64,7 +64,7 @@ struct sps30_measurement {
  * sps_get_driver_version() - Return the driver version
  * Return:  Driver version string
  */
-const char *sps_get_driver_version(void);
+const char* sps_get_driver_version(void);
 
 /**
  * sps30_probe() - check if SPS sensor is available and initialize it
@@ -84,7 +84,7 @@ int16_t sps30_probe();
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor);
+int16_t sps30_read_firmware_version(uint8_t* major, uint8_t* minor);
 
 /**
  * sps30_get_serial() - retrieve the serial number
@@ -95,7 +95,7 @@ int16_t sps30_read_firmware_version(uint8_t *major, uint8_t *minor);
  *          terminated). Must be at least SPS30_MAX_SERIAL_LEN long.
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_get_serial(char *serial);
+int16_t sps30_get_serial(char* serial);
 
 /**
  * sps30_start_measurement() - start measuring
@@ -123,7 +123,7 @@ int16_t sps30_stop_measurement();
  * @data_ready: Memory where the data-ready flag (0|1) is stored.
  * Return:      0 on success, an error code otherwise
  */
-int16_t sps30_read_data_ready(uint16_t *data_ready);
+int16_t sps30_read_data_ready(uint16_t* data_ready);
 
 /**
  * sps30_read_measurement() - read a measurement
@@ -132,7 +132,7 @@ int16_t sps30_read_data_ready(uint16_t *data_ready);
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_read_measurement(struct sps30_measurement *measurement);
+int16_t sps30_read_measurement(struct sps30_measurement* measurement);
 
 /**
  * sps30_get_fan_auto_cleaning_interval() - read the current(*) auto-cleaning
@@ -149,7 +149,7 @@ int16_t sps30_read_measurement(struct sps30_measurement *measurement);
  * @interval_seconds:   Memory where the interval in seconds is stored
  * Return:              0 on success, an error code otherwise
  */
-int16_t sps30_get_fan_auto_cleaning_interval(uint32_t *interval_seconds);
+int16_t sps30_get_fan_auto_cleaning_interval(uint32_t* interval_seconds);
 
 /**
  * sps30_set_fan_auto_cleaning_interval() - set the current auto-cleaning
@@ -180,7 +180,7 @@ int16_t sps30_set_fan_auto_cleaning_interval(uint32_t interval_seconds);
  * @interval_days:  Memory where the interval in days is stored
  * Return:          0 on success, an error code otherwise
  */
-int16_t sps30_get_fan_auto_cleaning_interval_days(uint8_t *interval_days);
+int16_t sps30_get_fan_auto_cleaning_interval_days(uint8_t* interval_days);
 
 /**
  * sps30_set_fan_auto_cleaning_interval_days() - convenience function to set the
