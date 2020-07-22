@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: sensirion/embedded-ci:2.0.0
+      - image: sensirion/embedded-ci:2.1.0
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
                make clean)
   deploy:
     docker:
-      - image: sensirion/embedded-ci:2.0.0
+      - image: sensirion/embedded-ci:2.1.0
     steps:
       - checkout
       - run:
