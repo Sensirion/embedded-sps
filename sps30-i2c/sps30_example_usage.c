@@ -54,6 +54,23 @@ int main(void) {
     }
     printf("SPS sensor probing successful\n");
 
+    uint8_t fw_major;
+    uint8_t fw_minor;
+    ret = sps30_read_firmware_version(&fw_major, &fw_minor);
+    if (ret) {
+        printf("error reading firmware version\n");
+    } else {
+        printf("FW: %u.%u\n", fw_major, fw_minor);
+    }
+
+    char serial_number[SPS30_MAX_SERIAL_LEN];
+    ret = sps30_get_serial(serial_number);
+    if (ret) {
+        printf("error reading serial number\n");
+    } else {
+        printf("Serial Number: %s\n", serial_number);
+    }
+
     ret = sps30_start_measurement();
     if (ret < 0)
         printf("error starting measurement\n");
