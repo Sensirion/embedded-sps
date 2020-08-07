@@ -44,8 +44,14 @@ extern "C" {
 #define SPS30_MAX_SERIAL_LEN 32
 /* 1s measurement intervals */
 #define SPS30_MEASUREMENT_DURATION_USEC 1000000
-/* 50ms delay after resetting the sensor */
-#define SPS30_RESET_DELAY_USEC 50000
+/* 100ms delay after resetting the sensor */
+#define SPS30_RESET_DELAY_USEC 100000
+/** The fan is switched on but not running */
+#define SPS30_DEVICE_STATUS_FAN_ERROR_MASK (1 << 4)
+/** The laser current is out of range */
+#define SPS30_DEVICE_STATUS_LASER_ERROR_MASK (1 << 5)
+/** The fan speed is out of range */
+#define SPS30_DEVICE_STATUS_FAN_SPEED_WARNING (1 << 21)
 
 struct sps30_measurement {
     float mc_1p0;
@@ -75,7 +81,7 @@ const char* sps_get_driver_version(void);
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_probe();
+int16_t sps30_probe(void);
 
 /**
  * sps30_read_firmware_version - read the firmware version
@@ -105,14 +111,16 @@ int16_t sps30_get_serial(char* serial);
  *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_start_measurement();
+int16_t sps30_start_measurement(void);
 
 /**
  * sps30_stop_measurement() - stop measuring
  *
+ * Stops measuring and puts the sensor back into idle mode.
+ *
  * Return:  0 on success, an error code otherwise
  */
-int16_t sps30_stop_measurement();
+int16_t sps30_stop_measurement(void);
 
 /**
  * sps30_read_datda_ready() - reads the current data-ready flag
@@ -141,10 +149,10 @@ int16_t sps30_read_measurement(struct sps30_measurement* measurement);
  * Note that interval_seconds must be discarded when the return code is
  * non-zero.
  *
- * (*) Note that due to a firmware bug, the reported interval is only updated on
- * sensor restart/reset. If the interval was thus updated after the last reset,
- * the old value is still reported. Power-cycle the sensor or call sps30_reset()
- * first if you need the latest value.
+ * (*) Note that due to a firmware bug on FW<2.2, the reported interval is only
+ * updated on sensor restart/reset. If the interval was thus updated after the
+ * last reset, the old value is still reported. Power-cycle the sensor or call
+ * sps30_reset() first if you need the latest value.
  *
  * @interval_seconds:   Memory where the interval in seconds is stored
  * Return:              0 on success, an error code otherwise
@@ -201,7 +209,7 @@ int16_t sps30_set_fan_auto_cleaning_interval_days(uint8_t interval_days);
  *
  * Return:          0 on success, an error code otherwise
  */
-int16_t sps30_start_manual_fan_cleaning();
+int16_t sps30_start_manual_fan_cleaning(void);
 
 /**
  * sps30_reset() - reset the SGP30
@@ -211,7 +219,7 @@ int16_t sps30_start_manual_fan_cleaning();
  *
  * The caller should wait at least SPS30_RESET_DELAY_USEC microseconds before
  * interacting with the sensor again in order for the sensor to restart.
- * Interactions with the sensor without this delay might fail.
+ * Interactions with the sensor before this delay might fail.
  *
  * Note that the interface-select configuration is reinterpreted, thus Pin 4
  * must be pulled to ground during the reset period for the sensor to remain in
@@ -219,7 +227,47 @@ int16_t sps30_start_manual_fan_cleaning();
  *
  * Return:          0 on success, an error code otherwise
  */
-int16_t sps30_reset();
+int16_t sps30_reset(void);
+
+/**
+ * sps30_sleep() - Send the (idle) sensor to sleep
+ *
+ * The sensor will reduce its power consumption to a minimum, but must be woken
+ * up again with sps30_wake_up() prior to resuming operations. It will only
+ * suceed if the sensor is idle, i.e. not currently measuring.
+ * Note that this command only works on firmware 2.0 or more recent.
+ *
+ * Return:          0 on success, an error code otherwise (e.g. if the firmware
+ *                  does not support the command)
+ */
+int16_t sps30_sleep(void);
+
+/**
+ * sps30_wake_up() - Wake up the sensor from sleep
+ *
+ * Use this command to wake up the sensor from sleep mode into idle mode.
+ * Note that this command only works on firmware 2.0 or more recent.
+ *
+ * Return:          0 on success, an error code otherwise (e.g. if the firmware
+ *                  does not support the command)
+ */
+int16_t sps30_wake_up(void);
+
+/**
+ * sps30_read_device_status_register() - Read the Device Status Register
+ *
+ * Reads the Device Status Register which reveals info, warnings and errors
+ * about the sensor's current operational state. Note that the flags are
+ * self-clearing, i.e. they reset to 0 when the condition is resolved.
+ * Note that this command only works on firmware 2.2 or more recent.
+ *
+ * @device_status_flags:    Memory where the device status flags are written
+ *                          into
+ *
+ * Return:          0 on success, an error code otherwise (e.g. if the firmware
+ *                  does not support the command)
+ */
+int16_t sps30_read_device_status_register(uint32_t* device_status_flags);
 
 #ifdef __cplusplus
 }
