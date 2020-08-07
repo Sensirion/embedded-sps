@@ -46,14 +46,12 @@ extern "C" {
 #define SPS30_MEASUREMENT_DURATION_USEC 1000000
 /* 50ms delay after resetting the sensor */
 #define SPS30_RESET_DELAY_USEC 50000
-/** SPS30_DEVICE_STATUS_FAN_ERR - The fan is switched on but not running */
-#define SPS30_DEVICE_STATUS_FAN_ERR(device_status) ((device_status) & (1 << 4))
-/** SPS30_DEVICE_STATUS_LASER_ERR - The laser current is out of range */
-#define SPS30_DEVICE_STATUS_LASER_ERR(device_status) \
-    ((device_status) & (1 << 5))
-/** SPS30_DEVICE_STATUS_FAN_SPEED_ERR - The fan speed is out of range */
-#define SPS30_DEVICE_STATUS_FAN_SPEED_ERR(device_status) \
-    ((device_status) & (1 << 21))
+/** The fan is switched on but not running */
+#define SPS30_DEVICE_STATUS_FAN_ERROR_MASK (1 << 4)
+/** The laser current is out of range */
+#define SPS30_DEVICE_STATUS_LASER_ERROR_MASK (1 << 5)
+/** The fan speed is out of range */
+#define SPS30_DEVICE_STATUS_FAN_SPEED_WARNING (1 << 21)
 
 struct sps30_measurement {
     float mc_1p0;
