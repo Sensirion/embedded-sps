@@ -52,8 +52,6 @@
 #define SPS_CMD_DELAY_USEC 5000
 #define SPS_CMD_DELAY_WRITE_FLASH_USEC 20000
 
-#define SPS30_SERIAL_NUM_WORDS ((SPS30_MAX_SERIAL_LEN) / 2)
-
 const char* sps_get_driver_version(void) {
     return SPS_DRV_VERSION_STR;
 }
@@ -88,7 +86,8 @@ int16_t sps30_get_serial(char* serial) {
     }
 
     error = sensirion_i2c_read_words_as_bytes(
-        SPS30_I2C_ADDRESS, (uint8_t*)serial, SPS30_SERIAL_NUM_WORDS);
+        SPS30_I2C_ADDRESS, (uint8_t*)serial,
+        SENSIRION_NUM_WORDS(SPS30_MAX_SERIAL_LEN));
 
     /* ensure a final '\0'. The firmware should always set this so this is just
      * in case something goes wrong.
