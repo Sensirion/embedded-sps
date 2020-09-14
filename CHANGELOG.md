@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`changed`] Update timings according to datasheet
  * [`changed`] Use configuration independent endianness conversions: no need to
                define `SENSIRION_BIG_ENDIAN` anymore.
+ * [`changed`] Makefile to only include needed files from embedded-common
 
 ## [3.0.1] - 2019-11-26
 
