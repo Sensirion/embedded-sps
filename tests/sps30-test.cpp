@@ -7,7 +7,7 @@
 #define SPS30_MIN_NC 0
 #define SPS30_MAX_NC 3000
 
-#define SECONDS_PER_DAY 86400u // 24h/d * 60m/h * 60s/m
+#define SECONDS_PER_DAY 86400u  // 24h/d * 60m/h * 60s/m
 
 // Less or equal (<=) for float arithmetics with small error (1e-5)
 #define LEQ(l, u) ((l) - (u) < 1e-5)
@@ -45,10 +45,10 @@ static void sps30_test(uint8_t set_interval_days) {
 
     // Wait for data to be ready
     do {
-        sensirion_sleep_usec(1e5); // Sleep 100ms
+        sensirion_sleep_usec(1e5);  // Sleep 100ms
         ret = sps30_read_data_ready(&data_ready);
         CHECK_ZERO_TEXT(ret, "sps30_read_data_ready while polling");
-    } while(!data_ready);
+    } while (!data_ready);
 
     // Read measurement
     ret = sps30_read_measurement(&m);
@@ -69,14 +69,15 @@ static void sps30_test(uint8_t set_interval_days) {
 
     // Check if mass concentration is rising monotonously
     CHECK_TRUE_TEXT(LEQ(SPS30_MIN_MC, m.mc_1p0) && LEQ(m.mc_1p0, m.mc_2p5) &&
-                    LEQ(m.mc_2p5, m.mc_4p0) && LEQ(m.mc_4p0, m.mc_10p0) &&
-                    LEQ(m.mc_10p0, SPS30_MAX_MC),
+                        LEQ(m.mc_2p5, m.mc_4p0) && LEQ(m.mc_4p0, m.mc_10p0) &&
+                        LEQ(m.mc_10p0, SPS30_MAX_MC),
                     "Mass concentration not rising monotonously");
 
     // Check if number concentration is rising monotonously
     CHECK_TRUE_TEXT(LEQ(SPS30_MIN_NC, m.nc_0p5) && LEQ(m.nc_0p5, m.nc_1p0) &&
-                    LEQ(m.nc_1p0, m.nc_2p5) && LEQ(m.nc_2p5, m.nc_4p0) &&
-                    LEQ(m.nc_4p0, m.nc_10p0) && LEQ(m.nc_10p0, SPS30_MAX_NC),
+                        LEQ(m.nc_1p0, m.nc_2p5) && LEQ(m.nc_2p5, m.nc_4p0) &&
+                        LEQ(m.nc_4p0, m.nc_10p0) &&
+                        LEQ(m.nc_10p0, SPS30_MAX_NC),
                     "Number concentration not rising monotonously");
 
     // Set auto cleaning interval in days, reset and get it again
@@ -118,7 +119,7 @@ static void sps30_test_setup() {
 
     sps30_delayed_reset();
 
-    const char *version = sps_get_driver_version();
+    const char* version = sps_get_driver_version();
     printf("sps30_get_driver_version: %s\n", version);
 
     ret = sps30_get_serial(serial);
@@ -130,7 +131,7 @@ static void sps30_test_setup() {
     printf("SPS30 Firmware version: %u.%u\n", fs_major, fs_minor);
 }
 
-TEST_GROUP(SPSTestGroup) {
+TEST_GROUP (SPSTestGroup) {
     void setup() {
         int16_t ret;
         sensirion_i2c_init();
@@ -145,18 +146,10 @@ TEST_GROUP(SPSTestGroup) {
     }
 };
 
-TEST(SPSTestGroup, SPS30Test_no_cleaning) {
-    sps30_test(0);
-}
+TEST (SPSTestGroup, SPS30Test_no_cleaning) { sps30_test(0); }
 
-TEST(SPSTestGroup, SPS30Test_daily_cleaning) {
-    sps30_test(1);
-}
+TEST (SPSTestGroup, SPS30Test_daily_cleaning) { sps30_test(1); }
 
-TEST(SPSTestGroup, SPS30Test_weekly_cleaning) {
-    sps30_test(7);
-}
+TEST (SPSTestGroup, SPS30Test_weekly_cleaning) { sps30_test(7); }
 
-TEST(SPSTestGroup, SPS30Test_maximum_cleaning) {
-    sps30_test(255);
-}
+TEST (SPSTestGroup, SPS30Test_maximum_cleaning) { sps30_test(255); }
