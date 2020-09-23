@@ -3,3 +3,6 @@
 /sps30-i2c/sps30_example_usage
 /sps30-i2c/user_config.inc
 /sps-common/sps_git_version.c
+/i2c-mux-testbed/
+/tests/sps30-test-hw_i2c
+/tests/sps30-test-sw_i2c
