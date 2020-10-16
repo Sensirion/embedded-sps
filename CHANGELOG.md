@@ -5,11 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2020-10-16
+
  * [`added`]   Support FW2.x (sleep, wake up, device status register)
  * [`changed`] Update timings according to datasheet
  * [`changed`] Use configuration independent endianness conversions: no need to
                define `SENSIRION_BIG_ENDIAN` anymore.
- * [`changed`] Makefile to only include needed files from embedded-common
+ * [`changed`] Release zip now only includes needed files from embedded-common
 
 ## [3.0.1] - 2019-11-26
 
@@ -65,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Initial I2C support for SPS30
 
-[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/3.0.1...master
+[Unreleased]: https://github.com/Sensirion/embedded-sps/compare/3.1.0...master
+[3.1.0]: https://github.com/Sensirion/embedded-sps/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/Sensirion/embedded-sps/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/Sensirion/embedded-sps/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/Sensirion/embedded-sps/compare/1.0.0...2.0.0
