@@ -1,4 +1,6 @@
 #include "sensirion_test_setup.h"
+#include "sensirion_i2c_hal.h"
+#include "i2c_mux.h"
 #include "sps30.h"
 
 // Measurement ranges according to datasheet
