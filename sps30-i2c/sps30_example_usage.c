@@ -32,6 +32,7 @@
 #include <stdio.h>  // printf
 
 #include "sps30.h"
+#include "sensirion_i2c_hal.h"
 
 /**
  * TO USE CONSOLE OUTPUT (printf) PLEASE ADAPT TO YOUR PLATFORM:
