@@ -26,17 +26,14 @@ $(release_drivers): sps-common/sps_git_version.c
 	export pkgname="$${driver}-$${tag}" && \
 	export pkgdir="release/$${pkgname}" && \
 	rm -rf "$${pkgdir}" && mkdir -p "$${pkgdir}" && \
-	cp -r embedded-common/hw_i2c/ "$${pkgdir}" && \
-	cp -r embedded-common/sw_i2c/ "$${pkgdir}" && \
-	cp embedded-common/sensirion_arch_config.h "$${pkgdir}" && \
-	cp embedded-common/sensirion_common.c "$${pkgdir}" && \
-	cp embedded-common/sensirion_common.h "$${pkgdir}" && \
-	cp embedded-common/sensirion_i2c.h "$${pkgdir}" && \
+	cp -r embedded-common/i2c/* "$${pkgdir}" && \
+	cp embedded-common/common/* "$${pkgdir}" && \
 	cp -r sps-common/* "$${pkgdir}" && \
 	cp -r $${driver}/* "$${pkgdir}" && \
 	cp CHANGELOG.md LICENSE "$${pkgdir}" && \
 	echo 'sps_driver_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sensirion_common_dir = .' >> $${pkgdir}/user_config.inc && \
+	echo 'sensirion_i2c_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sps_common_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sps30_i2c_dir = .' >> $${pkgdir}/user_config.inc && \
 	cd "$${pkgdir}" && $(MAKE) $(MFLAGS) && $(MAKE) clean $(MFLAGS) && cd - && \
