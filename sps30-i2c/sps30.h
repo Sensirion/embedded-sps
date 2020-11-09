@@ -36,8 +36,8 @@
 extern "C" {
 #endif
 
-#include "sensirion_config.h"
 #include "sensirion_common.h"
+#include "sensirion_config.h"
 #include "sensirion_i2c.h"
 
 #define SPS30_I2C_ADDRESS 0x69
