@@ -1,0 +1,21 @@
+name: syntax, static code analyis and build check for c drivers
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  code-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: cppcheck clang-format
+          version: 1.0
+      - name: cppcheck static code analyis
+        run: cppcheck --std=c89 --language=c --error-exitcode=1 --enable=warning,style,performance,portability --suppress=unreadVariable -i embedded-common/ -i release/ .

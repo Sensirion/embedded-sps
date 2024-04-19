@@ -146,10 +146,18 @@ TEST_GROUP (SPSTestGroup) {
     }
 };
 
-TEST (SPSTestGroup, SPS30Test_no_cleaning) { sps30_test(0); }
+TEST (SPSTestGroup, SPS30Test_no_cleaning) {
+    sps30_test(0);
+}
 
-TEST (SPSTestGroup, SPS30Test_daily_cleaning) { sps30_test(1); }
+TEST (SPSTestGroup, SPS30Test_daily_cleaning) {
+    sps30_test(1);
+}
 
-TEST (SPSTestGroup, SPS30Test_weekly_cleaning) { sps30_test(7); }
+TEST (SPSTestGroup, SPS30Test_weekly_cleaning) {
+    sps30_test(7);
+}
 
-TEST (SPSTestGroup, SPS30Test_maximum_cleaning) { sps30_test(255); }
+TEST (SPSTestGroup, SPS30Test_maximum_cleaning) {
+    sps30_test(255);
+}
